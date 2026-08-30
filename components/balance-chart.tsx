@@ -1,8 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { dateLabel, monthLabel } from "@/lib/date.ts";
+import type { ChartCopy } from "@/lib/i18n.ts";
+import { formatInteger, type Language } from "@/lib/locale.ts";
 import { formatBdt } from "@/lib/money.ts";
 import type { LedgerDay } from "@/lib/types.ts";
 
@@ -18,9 +20,25 @@ function niceBounds(values: number[]) {
   return { min: rawMin - padding, max: rawMax + padding };
 }
 
-export function BalanceChart({ days }: { days: LedgerDay[] }) {
+export function BalanceChart({
+  days,
+  language,
+  copy,
+  datasetKey,
+}: {
+  days: LedgerDay[];
+  language: Language;
+  copy: ChartCopy;
+  datasetKey: string;
+}) {
   const [activeIndex, setActiveIndex] = useState(Math.max(0, days.length - 1));
-  const active = days[Math.min(activeIndex, days.length - 1)];
+  const safeIndex = Math.min(activeIndex, Math.max(0, days.length - 1));
+  const active = days[safeIndex];
+
+  useEffect(() => {
+    setActiveIndex(Math.max(0, days.length - 1));
+  }, [datasetKey, days.length]);
+
   const plot = useMemo(() => {
     const balances = days.map((day) => day.closingBalancePaisa);
     const { min, max } = niceBounds(balances);
@@ -42,33 +60,47 @@ export function BalanceChart({ days }: { days: LedgerDay[] }) {
     <div className="chart-shell">
       <div className="chart-readout" aria-live="polite">
         <div>
-          <span className="eyebrow">Selected day</span>
-          <strong>{dateLabel(active.date, { year: true })}</strong>
+          <span className="eyebrow">{copy.selected}</span>
+          <strong>{dateLabel(active.date, { year: true, language })}</strong>
         </div>
         <div>
-          <span className="eyebrow">Closing balance</span>
+          <span className="eyebrow">{copy.closing}</span>
           <strong className={active.closingBalancePaisa < 0 ? "danger-text" : ""}>
-            {formatBdt(active.closingBalancePaisa)}
+            {formatBdt(active.closingBalancePaisa, { language })}
           </strong>
         </div>
         <div>
-          <span className="eyebrow">Used / day charge</span>
+          <span className="eyebrow">{copy.used}</span>
           <strong>
-            {active.units} units · {formatBdt(active.energyPaisa + active.vatPaisa)}
+            {copy.unitsAndCharge(
+              formatInteger(active.units, language),
+              formatBdt(active.energyPaisa + active.vatPaisa, { language }),
+            )}
           </strong>
         </div>
         <div>
-          <span className="eyebrow">Recharge</span>
-          <strong>{active.rechargePaisa ? formatBdt(active.rechargePaisa, { sign: true }) : "None"}</strong>
+          <span className="eyebrow">{copy.recharge}</span>
+          <strong>
+            {active.rechargePaisa
+              ? formatBdt(active.rechargePaisa, { sign: true, language })
+              : copy.none}
+          </strong>
         </div>
       </div>
 
-      <div className="chart-scroll">
+      <p id="chart-scroll-cue" className="chart-scroll-cue">{copy.scrollCue}</p>
+      <div
+        className="chart-scroll"
+        role="region"
+        aria-label={copy.regionLabel}
+        aria-describedby="chart-scroll-cue"
+        tabIndex={0}
+      >
         <svg
           className="balance-chart"
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
           role="img"
-          aria-label="Daily prepaid meter balance line. Green markers show recharge dates."
+          aria-label={copy.imageLabel}
         >
           <defs>
             <linearGradient id="balance-fill" x1="0" y1="0" x2="0" y2="1">
@@ -95,13 +127,13 @@ export function BalanceChart({ days }: { days: LedgerDay[] }) {
             className="zero-line"
           />
           <text x={MARGIN.left - 12} y={plot.y(0) + 4} textAnchor="end" className="axis-label">
-            ৳0
+            {formatBdt(0, { decimals: false, language })}
           </text>
           <text x={MARGIN.left - 12} y={MARGIN.top + 4} textAnchor="end" className="axis-label">
-            {formatBdt(plot.max, { decimals: false })}
+            {formatBdt(plot.max, { decimals: false, language })}
           </text>
           <text x={MARGIN.left - 12} y={HEIGHT - MARGIN.bottom} textAnchor="end" className="axis-label">
-            {formatBdt(plot.min, { decimals: false })}
+            {formatBdt(plot.min, { decimals: false, language })}
           </text>
 
           {plot.monthStarts.map(({ day, index }) => (
@@ -114,7 +146,7 @@ export function BalanceChart({ days }: { days: LedgerDay[] }) {
                 className="month-line"
               />
               <text x={plot.x(index) + 8} y={HEIGHT - 18} className="month-label">
-                {monthLabel(day.month).split(" ")[0]}
+                {monthLabel(day.month, language).split(" ")[0]}
               </text>
             </g>
           ))}
@@ -138,21 +170,24 @@ export function BalanceChart({ days }: { days: LedgerDay[] }) {
                   r="5.5"
                   className="recharge-dot"
                   role="img"
-                  aria-label={`${dateLabel(day.date, { year: true })}: recharged ${formatBdt(day.rechargePaisa)}`}
+                  aria-label={copy.rechargeMarker(
+                    dateLabel(day.date, { year: true, language }),
+                    formatBdt(day.rechargePaisa, { language }),
+                  )}
                 />
               </g>
             ) : null,
           )}
 
           <line
-            x1={plot.x(activeIndex)}
-            x2={plot.x(activeIndex)}
+            x1={plot.x(safeIndex)}
+            x2={plot.x(safeIndex)}
             y1={MARGIN.top}
             y2={HEIGHT - MARGIN.bottom}
             className="active-line"
           />
           <circle
-            cx={plot.x(activeIndex)}
+            cx={plot.x(safeIndex)}
             cy={plot.y(active.closingBalancePaisa)}
             r="7"
             className="active-dot"
@@ -161,20 +196,24 @@ export function BalanceChart({ days }: { days: LedgerDay[] }) {
       </div>
 
       <label className="chart-scrubber">
-        <span>Drag to audit any day</span>
+        <span>{copy.audit}</span>
         <input
           type="range"
           min="0"
           max={Math.max(0, days.length - 1)}
-          value={activeIndex}
+          value={safeIndex}
           onChange={(event) => setActiveIndex(Number(event.target.value))}
-          aria-label="Select a ledger day"
+          aria-label={copy.selectDay}
+          aria-valuetext={copy.valueText(
+            dateLabel(active.date, { year: true, language }),
+            formatBdt(active.closingBalancePaisa, { language }),
+          )}
         />
       </label>
-      <div className="chart-legend" aria-hidden="true">
-        <span><i className="legend-line" /> Closing balance</span>
-        <span><i className="legend-dot" /> Recharge</span>
-        <span><i className="legend-zero" /> Zero balance</span>
+      <div className="chart-legend">
+        <span><i className="legend-line" aria-hidden="true" /> {copy.balanceLegend}</span>
+        <span><i className="legend-dot" aria-hidden="true" /> {copy.rechargeLegend}</span>
+        <span><i className="legend-zero" aria-hidden="true" /> {copy.zeroLegend}</span>
       </div>
     </div>
   );

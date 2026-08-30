@@ -1,5 +1,11 @@
+import { localizeDigits, type Language } from "./locale.ts";
+
 const DAY_MS = 86_400_000;
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+const MONTHS = {
+  en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  bn: ["জানু", "ফেব", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগ", "সেপ্ট", "অক্ট", "নভে", "ডিসে"],
+} satisfies Record<Language, string[]>;
 
 export function parseDate(date: string): Date {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
@@ -36,16 +42,28 @@ export function dayOfMonth(date: string): number {
   return Number(date.slice(8, 10));
 }
 
-export function monthLabel(month: string): string {
+export function monthLabel(month: string, language: Language = "en"): string {
   const match = /^(\d{4})-(\d{2})$/.exec(month);
   if (!match || Number(match[2]) < 1 || Number(match[2]) > 12) throw new Error(`Invalid month: ${month}`);
-  return `${MONTHS[Number(match[2]) - 1]} ${match[1]}`;
+  return `${MONTHS[language][Number(match[2]) - 1]} ${localizeDigits(match[1], language)}`;
 }
 
-export function dateLabel(date: string, options?: { year?: boolean }): string {
+export function dateLabel(date: string, options?: { year?: boolean; language?: Language }): string {
+  const parts = dateParts(date, options);
+  return `${parts.day} ${parts.monthYear}`;
+}
+
+export function dateParts(
+  date: string,
+  options?: { year?: boolean; language?: Language },
+): { day: string; monthYear: string } {
   parseDate(date);
+  const language = options?.language ?? "en";
   const year = date.slice(0, 4);
-  const month = MONTHS[Number(date.slice(5, 7)) - 1];
+  const month = MONTHS[language][Number(date.slice(5, 7)) - 1];
   const day = String(Number(date.slice(8, 10)));
-  return `${day} ${month}${options?.year ? ` ${year}` : ""}`;
+  return {
+    day: localizeDigits(day, language),
+    monthYear: `${month}${options?.year ? ` ${localizeDigits(year, language)}` : ""}`,
+  };
 }

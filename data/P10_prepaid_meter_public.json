@@ -1,5 +1,5 @@
 {
-  "schema_version": "2.1",
+  "schema_version": "2.2",
   "problem_id": "P10",
   "format_note": "## Case format\n```json\n{ \"case_id\": \"PUB-01\",\n  \"opening_balance_bdt\": \"350.00\",\n  \"days\": [ {\"date\": \"2026-01-01\", \"units\": 5}, {\"date\": \"2026-01-02\", \"units\": 4}, ... ],\n  \"recharges\": [ {\"date\": \"2026-01-03\", \"amount_bdt\": \"1000.00\"}, ... ],\n  \"today\": \"2026-06-30\", \"usual_daily_units\": 9, \"target_date\": \"2026-07-25\",\n  \"comparison\": {\"months\": [\"2026-04\", \"2026-05\", \"2026-06\"], \"source\": \"readings\", \"daily_units\": null,\n                 \"opening_balance_bdt\": \"0.00\", \"low_threshold_bdt\": \"100.00\",\n                 \"low_amount_bdt\": \"2000.00\", \"monthly_amount_bdt\": \"2000.00\"} }\n```\nReadings are whole units per day, consecutive, starting on the 1st of a month (so the slab counter\nstarts at zero). `opening_balance_bdt` is the meter balance before the first day. `today` is the last\nreading date. Item 4 runs on the three `comparison.months`: `source` `readings` uses the case's own",
   "cases": [

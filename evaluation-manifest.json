@@ -7,7 +7,7 @@
   "event_start_code": "LSH26-8490-C900",
   "repository_created_before_release": true,
   "pre_event_materials": [
-    "A private empty GitHub repository created before release; its first event-work commit contains EVENT.md.",
+    "The repository was created before release. Git records initial commit 7a9d4dd33dd83bb7ca710825225a0cd8229ac9fb at 17:55:45 Asia/Dhaka on 30 August 2026. Its tree contains only a seven-line EVENT.md with the team ID, P10, event start code and original local repository mapping. No solution source, dependencies, configuration, assets or fixture data were present in that commit. EVENT.md records the later application and template-expansion commits without changing history.",
     "CurrentJabe was reviewed for strict TypeScript, accessibility and local-first patterns. No outage-domain source, product branding, data or proprietary font assets were copied.",
     "The Semester 10 energy-demand project was reviewed for Bangladesh seasonal context and chart ideas. No model, dataset, backend or runtime artifact was copied.",
     "The pnpm lockfile uses the same already-installed minimal Next.js, React and TypeScript dependency versions as CurrentJabe."
@@ -15,17 +15,17 @@
   "sample_data": {
     "loads_published_fixture": true,
     "method": "Seeded on start from data/P10_prepaid_meter_public.json, with validated JSON file upload for published or unpublished judge fixtures.",
-    "reset_instructions": "Click 'Restore samples' after loading a judge JSON file, or refresh the page before any file has been loaded. Select PUB-01 for the documented default evidence."
+    "reset_instructions": "Click 'Restore samples' after loading a judge JSON file, or reload the page, to restore the published cases. Select PUB-01 for the documented default evidence."
   },
-  "problem_solving_method": "Model the prepaid meter as a deterministic daily money ledger. Process start-of-day recharges and the month's first-recharge fixed charges, split each day's units progressively across calendar-month slab boundaries, add 5% VAT to energy only, and preserve a trace for every day. Reuse the same tariff primitive for balance reconstruction, run-out forecasting, target-date top-ups and both habit simulations so the comparison cannot fabricate an energy-rate saving.",
+  "problem_solving_method": "Model the prepaid meter as a daily ledger in integer paisa. Apply start-of-day recharges and the month's first-recharge fixed charges, split daily units across calendar-month slab boundaries, add 5% VAT to energy only, and retain each day's balance. One tariff function handles history, run-out forecasts, target-date top-ups and both habit simulations. Tests check boundary charges, invalid inputs and the rule that identical usage produces identical energy cost.",
   "requirements": {
     "R1": {
       "status": "complete",
-      "evidence": "The home page loads all 25 official v2.1 cases from data/P10_prepaid_meter_public.json, defaults to PUB-01 with 181 consecutive readings, identifies its light and heavy months and ৳4,300 late-May recharge, and accepts validated same-shape JSON through 'Load judge JSON'. Validation is in lib/fixture.ts."
+      "evidence": "The home page loads all 25 official v2.2 cases from data/P10_prepaid_meter_public.json, SHA-256 13e7dd3d0ad55429bdce1db4c70175bb6f6c60a197826b9a8e87d3da210e4c4e. PUB-01 has 181 consecutive readings, light and heavy months and a ৳4,300 late-May recharge. 'Load judge JSON' accepts validated same-shape JSON. Validation is in lib/fixture.ts."
     },
     "R2": {
       "status": "complete",
-      "evidence": "The 'Daily money trail' shows the reconstructed closing-balance line, all recharge markers, a day scrubber and monthly audit table. Exact tariff, VAT and first-recharge logic is in lib/tariff.ts and lib/ledger.ts; the chart is components/balance-chart.tsx."
+      "evidence": "'The daily money trail' shows the reconstructed closing-balance line, all recharge markers, a keyboard-accessible day slider and monthly audit table. The chart and table scroll on narrow screens. Tariff, VAT and first-recharge logic is in lib/tariff.ts and lib/ledger.ts; the chart is components/balance-chart.tsx."
     },
     "R3": {
       "status": "complete",
@@ -33,52 +33,66 @@
     },
     "R4": {
       "status": "complete",
-      "evidence": "The 'Recharge timing, honestly compared' section runs both policies over the case's exact three months and reports consumed cost separately from deposits. It visibly proves zero energy-cost difference. All 25 public cases pass that invariant in tests/tariff.test.ts."
+      "evidence": "'Compare recharge timing' runs both policies over the case's exact three months and reports consumed cost separately from deposits. The energy-cost check should show zero difference. tests/tariff.test.ts checks all 25 public cases and verifies that any consumed-cost difference equals the fixed-charge difference."
     }
   },
   "team_members": [
     {
-      "registered_name": "Adib Ar Rahman Khan (Rajin Khan)",
+      "registered_name": "Adib Ar Rahman Khan",
       "github_username": "rajin-khan",
-      "major_contribution": "Team lead; problem decomposition, product direction, rules and tariff review, AI-agent coordination, verification plan, deployment and final submission ownership.",
+      "major_contribution": "Led problem breakdown and tariff review, coordinated AI-assisted work, integrated the core ledger, forecasts, comparison and interface, and set up verification.",
       "evidence_paths_or_commits": [
-        "HACKATHON_CONTEXT.md",
-        "CONTEXT.md",
-        "docs/adr/0001-local-deterministic-ledger.md"
+        "e57cbaecf3f074ab20fc397caf0e94ce4cdc7561",
+        "lib/ledger.ts",
+        "lib/tariff.ts",
+        "components/meter-dashboard.tsx",
+        "tests/tariff.test.ts"
       ]
     },
     {
       "registered_name": "Saumik Saha Kabbya",
       "github_username": "Kabbya04",
-      "major_contribution": "Contribution record pending team confirmation before the judged commit.",
-      "evidence_paths_or_commits": []
+      "major_contribution": "Created the registered repository and shared team access while the lead was unavailable. Original repository ownership and the team's 30 August LofiHub repository-creation conversation document this work.",
+      "evidence_paths_or_commits": [
+        "EVENT.md",
+        "README.md"
+      ]
     },
     {
       "registered_name": "Samiyeel Alim Binaaf",
       "github_username": "Pronaaf2k",
-      "major_contribution": "Contribution record pending team confirmation before the judged commit.",
-      "evidence_paths_or_commits": []
+      "major_contribution": "Hardened fixture imports and target-date handling, added regression tests and the monthly-table scroll cue, and improved system-font fallbacks.",
+      "evidence_paths_or_commits": [
+        "92d4c48c7bb8e652fd30d16ac24131919b998897",
+        "22c38b22f717917a2749fa4dd9ac2667beeac0bd",
+        "lib/fixture.ts",
+        "lib/ledger.ts",
+        "tests/tariff.test.ts",
+        "app/globals.css"
+      ]
     }
   ],
   "major_design_decisions": [
-    "Use a local deterministic ledger instead of Supabase or ML so every judged answer works offline and is auditable.",
+    "Run all calculations in the browser with a deterministic ledger and no backend or external API.",
     "Use integer paisa and round each day's 5% energy VAT to the nearest paisa to avoid floating-point money drift.",
     "Split usage progressively across slab boundaries and reset the counter only on calendar-month changes.",
     "Accept same-shape JSON fixtures and validate consecutive dates, money fields and comparison months before calculation.",
-    "Use a custom SVG balance chart and native controls to avoid an unnecessary charting dependency."
+    "Use an SVG balance chart and native controls without a charting dependency. Keep the chart and table scrollable on narrow screens so labels remain readable.",
+    "Use English and Bangla labels, dates and amounts over the same calculation results. Switching language does not change the data."
   ],
   "known_limitations": [
-    "Imported judge fixtures last for the current browser session only; the app intentionally has no account or server persistence.",
-    "Future usage follows the case's stated usual_daily_units as a constant because the problem supplies that value and does not request a probabilistic forecast.",
-    "The first public build supports seeded cases and JSON file upload, not manual row-by-row entry."
+    "Imported fixtures stay in the open page. Reloading restores the published samples. There is no account or shared storage.",
+    "Future usage follows the case's constant usual_daily_units rather than predicting changes in household use.",
+    "The run-out search stops after ten years. A result beyond that range is not a promise of unlimited balance.",
+    "The app supports seeded cases and JSON file upload, not manual row-by-row entry."
   ],
   "ai_tools_used": [
     {
       "tool": "OpenAI Codex",
-      "used_for": "Official-rule research, prior-project audit, domain modeling, implementation, interface design, test generation, documentation and browser QA under the team lead's direction.",
-      "how_output_was_verified": "Pure-domain tests cover all 25 public fixtures, every slab boundary, monthly fixed charges, target reconciliation and the R-16 energy-cost invariant. The team also runs TypeScript checking, a production Next.js build and desktop/mobile browser QA."
+      "used_for": "Rule research, prior-project review, domain modeling, implementation, interface design, test generation, documentation and browser review under the team lead's direction.",
+      "how_output_was_verified": "Domain tests cover all 25 public fixtures, slab boundaries, first-recharge charges, malformed inputs, target reconciliation and the R-16 energy-cost rule. pnpm check runs those tests, TypeScript checking and a production Next.js build. The README lists browser checks for the user workflow, language toggle, fixture reset and narrow-screen chart and table."
     }
   ],
   "licenses_file": "LICENSES.md",
-  "declaration": "The information above is complete and truthful to the best of the team's knowledge. Pending member-contribution lines will be replaced with confirmed work before the judged commit."
+  "declaration": "The information above is complete and truthful to the best of the team's knowledge."
 }

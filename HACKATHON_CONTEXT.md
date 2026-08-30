@@ -1,21 +1,33 @@
 # LofiStack Hackathon 2026 context
 
-This repository is the team's P10 project. The shared event strategy and P01 details are documented in the sibling repository at `/Users/rajin/Developer/LOFISTACK/lsh26-t028-p-1/HACKATHON_CONTEXT.md`.
+This repository contains KotoDin, the team's P10 project. The separate P01 project is [KajChole](https://github.com/rajin-khan/lsh26-t028-p01).
 
 ## Team and repository mapping
 
 - Team: GROCERYBOIX
 - Team ID: LSH26-T028
 - Team leader: Rajin Khan, whose registered arena name is Adib Ar Rahman Khan
-- This repository is the team's P10 project.
-- The sibling repository `lsh26-t028-p-1` is the team's P01 project.
+- P10 repository: `rajin-khan/lsh26-t028-p10`
+- P01 repository: `rajin-khan/lsh26-t028-p01`
 - Event start code: `LSH26-8490-C900`
 
-## Event rules that affect implementation
+## Sources and submission timing
 
-The live v2.1 score is out of 100: functionality 30, technical execution 15, UI and UX 15, demo and documentation 15, difficulty credit 15, and early submission 10. Each problem has four required items. The early bonus unlocks only when both projects complete at least three of their four required items. The Google Form server receipt is the official early-bonus time; commit times are not used. Building ends and unpublished fixture testing begins at 10 PM. The arena accepts submission-form corrections until midnight and marks submissions from midnight to 1 AM late.
+Reviewed on 30 August 2026 against the supplied Submission Kit v2.2, including `SUBMISSION-GUIDE.md`, `CLARIFICATIONS.md`, the templates, and the P10 fixture. The checked-in fixture matches the kit byte for byte. The earlier Word documents and Discord summaries contain different scoring, demo, and deadline information.
 
-The team submits two public repositories through one leader-submitted form. The form requires each public repository URL, the exact 40-character commit SHA being judged, and a live URL. Keep history intact. AI tools and pre-event material are allowed but must be disclosed. Never commit secrets.
+The [current live guide](https://live.hackathon.lofistack.com/guide) says building ends at 10 PM, submission closes at midnight, and a late window runs until 1 AM. It also says the live guide and arena supersede earlier information. The supplied v2.2 kit instead requires a valid receipt before 10 PM and says changes need a numbered correction. The supplied Discord replies at 7:02 PM and 7:35 PM mention two extra hours for submission.
+
+These sources conflict. This repository does not treat the extension as settled: aim to finish and submit before 10 PM Bangladesh time, and confirm any later allowance with the organizers. A local commit timestamp is not a submission receipt.
+
+Other reviewed pages: [event arena](https://live.hackathon.lofistack.com/), [orientation](https://hackathon.lofistack.com/orientation-page), [hackathon site](https://hackathon.lofistack.com/), and [LofiStack](https://www.lofistack.com/). The company site adds no P10 calculation requirements.
+
+## Requirements shared by the current sources
+
+Each problem has four required items. The early bonus requires at least three fully working items on both problems. Two public repositories and two live applications go into one leader-submitted form, with each exact 40-character judged commit SHA. The deployed application must match that SHA. Keep the history intact and keep both applications and repositories available until results.
+
+Each repository needs source code, `README.md`, `evaluation-manifest.json`, `EVENT.md`, and `LICENSES.md`. The README and manifest must describe the solving method and all three registered members' contributions. AI assistance and pre-event material must be disclosed. Secrets do not belong in the repository.
+
+Under kit v2.2, a demo video is optional and no longer than three minutes. If supplied, it must cover the method and every member's contribution. This differs from the older 60-second-minimum video instructions. Deployment, public access, final links, and the submission form remain team-lead steps after local review.
 
 ## P10: prepaid meter recharge advisor
 
@@ -50,8 +62,8 @@ Use only this tariff:
 - The monthly habit recharges the case amount on the first of each month.
 - Both simulations start from the case's opening balance and run for the same three named months.
 
-## Build priority
+## Verification focus
 
-Build the tariff engine and balance history first. Then add the run-out and target-date calculations. Then add the habit comparison. Include visible calculation explanations and boundary tests for 75/76, 200/201, 300/301, 400/401, and 600/601 units. Do not claim a recharge timing energy saving. The strongest demo is a seeded household with the three required month types, a readable balance chart, and an auditable cost breakdown.
+Verify the tariff and daily balance before the forecasts and habit comparison. Tests cover boundaries at 75/76, 200/201, 300/301, 400/401, and 600/601 units. Judge data must use the same shape as the supplied samples; importing it must either recalculate the application or show a useful validation error without losing the current case.
 
-The P01 sibling project uses existing CurrentJabe electricity work as its starting point. P10 may share the team's visual language and disclosed pre-event material, but it must remain a separate repository and a distinct working product.
+The UI must show a light month, a heavy month, a late-month recharge, a readable balance chart, and a checkable cost breakdown. Switching English and Bangla changes presentation only. It must not change the case, target date, chart selection, or calculated amounts. Recharge timing must never be described as an energy-rate saving.
