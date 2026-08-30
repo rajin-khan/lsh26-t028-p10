@@ -830,6 +830,16 @@ input {
 
 .table-scroll {
   overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid var(--coral);
+  outline-offset: -3px;
+}
+
+.table-scroll-cue {
+  display: none;
 }
 
 table {
@@ -928,6 +938,12 @@ tbody tr:last-child td {
   border-radius: 0;
   font-family: var(--mono);
   font-size: clamp(18px, 2.2vw, 28px);
+}
+
+.target-date-notice {
+  margin: 10px 0 0;
+  color: var(--acid);
+  font-size: 12px;
 }
 
 .recommendation {
@@ -1608,6 +1624,16 @@ footer > a {
 
   .table-heading {
     padding: 20px;
+  }
+
+  .table-scroll-cue {
+    display: block;
+    margin: -8px 20px 16px;
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .target-panel,

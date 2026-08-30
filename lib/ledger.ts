@@ -146,6 +146,9 @@ export function calculateTargetRecharge(
   ledger: Ledger,
   targetDate: string,
 ): TargetRecharge {
+  if (targetDate < household.today) {
+    throw new Error("Target date cannot be before today");
+  }
   const dates = daysBetween(household.today, targetDate);
   let activeMonth = monthOf(household.today);
   let monthUnits = ledger.currentMonthUnits;

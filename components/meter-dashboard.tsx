@@ -60,6 +60,7 @@ export function MeterDashboard({ fixture }: { fixture: Fixture }) {
   const [selectedId, setSelectedId] = useState(fixture.cases[0].case_id);
   const [sourceLabel, setSourceLabel] = useState(`Official v${fixture.schema_version} fixture · 25 cases`);
   const [importError, setImportError] = useState("");
+  const [targetDateNotice, setTargetDateNotice] = useState("");
   const [targetDate, setTargetDate] = useState(fixture.cases[0].target_date);
   const fileInput = useRef<HTMLInputElement>(null);
   const household = cases.find((item) => item.case_id === selectedId) ?? cases[0];
@@ -80,6 +81,7 @@ export function MeterDashboard({ fixture }: { fixture: Fixture }) {
     if (!next) return;
     setSelectedId(caseId);
     setTargetDate(next.target_date);
+    setTargetDateNotice("");
   };
 
   const handleImport = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -90,6 +92,7 @@ export function MeterDashboard({ fixture }: { fixture: Fixture }) {
       setCases(imported);
       setSelectedId(imported[0].case_id);
       setTargetDate(imported[0].target_date);
+      setTargetDateNotice("");
       setSourceLabel(`${file.name} · ${imported.length} validated case${imported.length === 1 ? "" : "s"}`);
       setImportError("");
     } catch (error) {
@@ -103,6 +106,7 @@ export function MeterDashboard({ fixture }: { fixture: Fixture }) {
     setCases(fixture.cases);
     setSelectedId(fixture.cases[0].case_id);
     setTargetDate(fixture.cases[0].target_date);
+    setTargetDateNotice("");
     setSourceLabel(`Official v${fixture.schema_version} fixture · 25 cases`);
     setImportError("");
   };
@@ -229,8 +233,9 @@ export function MeterDashboard({ fixture }: { fixture: Fixture }) {
           <div className="table-heading">
             <h3>Month-by-month audit</h3>
             <p>Closing balance can be negative. The ledger keeps tracing actual history instead of hiding a shortfall.</p>
+            <span className="table-scroll-cue">Swipe horizontally for VAT, fixed, and closing</span>
           </div>
-          <div className="table-scroll">
+          <div className="table-scroll" role="region" aria-label="Monthly audit table. Swipe horizontally on narrow screens." tabIndex={0}>
             <table>
               <thead><tr><th>Month</th><th>Units</th><th>Deposited</th><th>Energy</th><th>VAT</th><th>Fixed</th><th>Closing</th></tr></thead>
               <tbody>
@@ -266,8 +271,18 @@ export function MeterDashboard({ fixture }: { fixture: Fixture }) {
               type="date"
               min={household.today}
               value={targetDate}
-              onInput={(event) => setTargetDate(event.currentTarget.value || household.today)}
+              onInput={(event) => {
+                const nextDate = event.currentTarget.value;
+                if (!nextDate || nextDate < household.today) {
+                  setTargetDate(household.today);
+                  setTargetDateNotice(`Target date reset to ${dateLabel(household.today, { year: true })}.`);
+                  return;
+                }
+                setTargetDate(nextDate);
+                setTargetDateNotice("");
+              }}
             />
+            {targetDateNotice ? <p className="target-date-notice" role="alert">{targetDateNotice}</p> : null}
             <div className="recommendation">
               <span>Recharge today</span>
               <strong>{formatBdt(results.target.rechargePaisa)}</strong>

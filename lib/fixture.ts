@@ -30,10 +30,17 @@ export function validateHouseholdCase(value: unknown): HouseholdCase {
   }
 
   assert(Array.isArray(value.recharges), `${value.case_id}: recharges must be an array`);
+  const firstReadingDate = value.days[0].date;
+  const lastReadingDate = previousDate;
+  assert(lastReadingDate, `${value.case_id}: days must contain at least one reading`);
   for (const rawRecharge of value.recharges) {
     assert(isRecord(rawRecharge), `${value.case_id}: every recharge must be an object`);
     assert(typeof rawRecharge.date === "string", `${value.case_id}: recharge date is required`);
     parseDate(rawRecharge.date);
+    assert(
+      rawRecharge.date >= firstReadingDate && rawRecharge.date <= lastReadingDate,
+      `${value.case_id}: recharge date ${rawRecharge.date} must fall within the reading window`,
+    );
     assert(typeof rawRecharge.amount_bdt === "string", `${value.case_id}: recharge amount must be text`);
     assert(bdtToPaisa(rawRecharge.amount_bdt) > 0, `${value.case_id}: recharge amounts must be positive`);
   }
@@ -62,7 +69,12 @@ export function validateHouseholdCase(value: unknown): HouseholdCase {
     "monthly_amount_bdt",
   ] as const) {
     assert(typeof comparison[field] === "string", `${value.case_id}: ${field} must be text`);
-    bdtToPaisa(comparison[field]);
+    const amount = bdtToPaisa(comparison[field]);
+    if (field === "opening_balance_bdt" || field === "low_threshold_bdt") {
+      assert(amount >= 0, `${value.case_id}: ${field} must be non-negative`);
+    } else {
+      assert(amount > 0, `${value.case_id}: ${field} must be positive`);
+    }
   }
 
   return value as HouseholdCase;
@@ -78,6 +90,7 @@ export function parseFixtureJson(text: string): HouseholdCase[] {
 
   if (isRecord(parsed) && Array.isArray(parsed.cases)) {
     assert(parsed.problem_id === "P10", "Fixture problem_id must be P10");
+    assert(parsed.cases.length > 0, "Fixture must contain at least one case");
     return parsed.cases.map(validateHouseholdCase);
   }
   return [validateHouseholdCase(parsed)];

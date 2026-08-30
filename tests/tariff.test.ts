@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { parseFixtureJson } from "../lib/fixture.ts";
+import { parseFixtureJson, validateHouseholdCase } from "../lib/fixture.ts";
 import {
   calculateTargetRecharge,
   compareRechargeHabits,
@@ -20,6 +20,29 @@ test("all 25 public cases pass fixture validation", () => {
   assert.equal(publicCases.length, 25);
   assert.equal(publicCases[0].case_id, "PUB-01");
   assert.equal(publicCases[24].case_id, "PUB-25");
+});
+
+test("rejects empty fixture case lists", () => {
+  assert.throws(
+    () => parseFixtureJson(JSON.stringify({ problem_id: "P10", cases: [] })),
+    /at least one case/,
+  );
+});
+
+test("rejects invalid comparison amounts", () => {
+  const negativeThreshold = structuredClone(publicCases[0]);
+  negativeThreshold.comparison.low_threshold_bdt = "-1.00";
+  assert.throws(() => validateHouseholdCase(negativeThreshold), /low_threshold_bdt must be non-negative/);
+
+  const zeroDeposit = structuredClone(publicCases[0]);
+  zeroDeposit.comparison.monthly_amount_bdt = "0.00";
+  assert.throws(() => validateHouseholdCase(zeroDeposit), /monthly_amount_bdt must be positive/);
+});
+
+test("rejects recharges outside the reading window", () => {
+  const household = structuredClone(publicCases[0]);
+  household.recharges.push({ date: "2025-12-31", amount_bdt: "100.00" });
+  assert.throws(() => validateHouseholdCase(household), /must fall within the reading window/);
 });
 
 test("progressively splits units across every tariff boundary", () => {
@@ -101,6 +124,15 @@ test("target recommendation reconciles to projected cost less balance", () => {
     Math.max(0, recommendation.projectedCostPaisa - ledger.currentBalancePaisa),
   );
   assert.equal(recommendation.units, recommendation.days * household.usual_daily_units);
+});
+
+test("rejects a target date before today", () => {
+  const household = publicCases[0];
+  const ledger = reconstructLedger(household);
+  assert.throws(
+    () => calculateTargetRecharge(household, ledger, "2026-06-29"),
+    /Target date cannot be before today/,
+  );
 });
 
 test("habit comparison never invents an energy-rate saving", () => {
