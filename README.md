@@ -36,7 +36,7 @@ This runs the domain tests, TypeScript checking and production build. To serve t
 The names below use the English interface. The same controls are available in Bangla.
 
 1. Start on PUB-01. Check that the page shows six months, 181 readings, a light January, a heavy May and the late-May recharge.
-2. Use the day slider in "The daily money trail". The selected date, balance, units and recharge should change together. On a narrow screen, scroll the chart and monthly table sideways to read them.
+2. Use the day slider in "Daily balance". The selected date, balance, units and recharge should change together. On a narrow screen, scroll the chart and monthly table sideways to read them.
 3. Change the target date in "How much should we recharge?". The top-up and its breakdown should update. A date before the case's `today` should not be accepted.
 4. In "Compare recharge timing", PUB-01 should show equal consumed cost. Select PUB-02 to see a difference caused by fixed charges. Energy-cost difference should remain zero.
 5. Use "Load judge JSON" to open `data/P10_prepaid_meter_public.json` or a same-shape judge fixture. "Restore samples" or a page reload should return to the published cases.
@@ -67,7 +67,7 @@ Complete. `lib/tariff.ts` prices units progressively across 75/76, 200/201, 300/
 5. Add 5% VAT to energy only, rounded to the nearest paisa.
 6. Deduct energy and VAT and record the closing balance.
 
-"The daily money trail" shows the closing balance as an SVG line and marks every recharge date. A keyboard-accessible day slider exposes the daily values. The monthly table separates deposits, energy, VAT, fixed charges and closing balance. Both the chart and table scroll on narrow screens so their labels stay readable. A reconstructed balance may go negative; the ledger keeps the shortfall visible.
+"Daily balance" shows the closing balance as an SVG line and marks every recharge date. A keyboard-accessible day slider exposes the daily values. The monthly table separates deposits, energy, VAT, fixed charges and closing balance. Both the chart and table scroll on narrow screens so their labels stay readable. A reconstructed balance may go negative; the ledger keeps the shortfall visible.
 
 ### R3, run-out and target-date advice
 

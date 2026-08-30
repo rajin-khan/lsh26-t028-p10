@@ -25,7 +25,7 @@
     },
     "R2": {
       "status": "complete",
-      "evidence": "'The daily money trail' shows the reconstructed closing-balance line, all recharge markers, a keyboard-accessible day slider and monthly audit table. The chart and table scroll on narrow screens. Tariff, VAT and first-recharge logic is in lib/tariff.ts and lib/ledger.ts; the chart is components/balance-chart.tsx."
+      "evidence": "'Daily balance' shows the reconstructed closing-balance line, all recharge markers, a keyboard-accessible day slider and monthly audit table. The chart and table scroll on narrow screens. Tariff, VAT and first-recharge logic is in lib/tariff.ts and lib/ledger.ts; the chart is components/balance-chart.tsx."
     },
     "R3": {
       "status": "complete",
