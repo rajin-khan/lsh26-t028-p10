@@ -680,7 +680,7 @@ input {
 .balance-chart {
   display: block;
   width: 100%;
-  min-width: 840px;
+  max-width: 100%;
   height: auto;
 }
 
