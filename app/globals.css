@@ -10,9 +10,10 @@
   --cyan: #70ddd0;
   --white: #fbfbf5;
   --chart-fill: #3da796;
-  --display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --sans: "Avenir Next", Avenir, "Gill Sans", sans-serif;
-  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  /* Keep the visual hierarchy stable on judges' machines without shipping proprietary fonts. */
+  --display: Georgia, "Times New Roman", serif;
+  --sans: Arial, Helvetica, sans-serif;
+  --mono: "Courier New", Courier, monospace;
 }
 
 * {
