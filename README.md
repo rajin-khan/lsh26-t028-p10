@@ -5,7 +5,7 @@ KotoDin answers the prepaid-meter question a family actually asks: "How many day
 - Team: GROCERYBOIX, `LSH26-T028`
 - Problem: `P10`, Prepaid Meter Recharge Advisor
 - Repository: `https://github.com/Kabbya04/lsh26-t028-p10`
-- Live URL: pending Vercel deployment
+- Live URL: pending public Vercel deployment
 - Event start code: `LSH26-8490-C900`
 - Public fixture: release 2.1, SHA-256 `6bac497566d848b8de46df17cad7e15347393805df6fca7c2694dab80b827c7f`
 
