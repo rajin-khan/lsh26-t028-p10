@@ -1,0 +1,84 @@
+{
+  "team_id": "LSH26-T028",
+  "problem_id": "P10",
+  "repository_name": "lsh26-t028-p10",
+  "live_url": "",
+  "demo_video_url_optional": "",
+  "event_start_code": "LSH26-8490-C900",
+  "repository_created_before_release": true,
+  "pre_event_materials": [
+    "A private empty GitHub repository created before release; its first event-work commit contains EVENT.md.",
+    "CurrentJabe was reviewed for strict TypeScript, accessibility and local-first patterns. No outage-domain source, product branding, data or proprietary font assets were copied.",
+    "The Semester 10 energy-demand project was reviewed for Bangladesh seasonal context and chart ideas. No model, dataset, backend or runtime artifact was copied.",
+    "The pnpm lockfile uses the same already-installed minimal Next.js, React and TypeScript dependency versions as CurrentJabe."
+  ],
+  "sample_data": {
+    "loads_published_fixture": true,
+    "method": "Seeded on start from data/P10_prepaid_meter_public.json, with validated JSON file upload for published or unpublished judge fixtures.",
+    "reset_instructions": "Click 'Restore samples' after loading a judge JSON file, or refresh the page before any file has been loaded. Select PUB-01 for the documented default evidence."
+  },
+  "problem_solving_method": "Model the prepaid meter as a deterministic daily money ledger. Process start-of-day recharges and the month's first-recharge fixed charges, split each day's units progressively across calendar-month slab boundaries, add 5% VAT to energy only, and preserve a trace for every day. Reuse the same tariff primitive for balance reconstruction, run-out forecasting, target-date top-ups and both habit simulations so the comparison cannot fabricate an energy-rate saving.",
+  "requirements": {
+    "R1": {
+      "status": "complete",
+      "evidence": "The home page loads all 25 official v2.1 cases from data/P10_prepaid_meter_public.json, defaults to PUB-01 with 181 consecutive readings, identifies its light and heavy months and ৳4,300 late-May recharge, and accepts validated same-shape JSON through 'Load judge JSON'. Validation is in lib/fixture.ts."
+    },
+    "R2": {
+      "status": "complete",
+      "evidence": "The 'Daily money trail' shows the reconstructed closing-balance line, all recharge markers, a day scrubber and monthly audit table. Exact tariff, VAT and first-recharge logic is in lib/tariff.ts and lib/ledger.ts; the chart is components/balance-chart.tsx."
+    },
+    "R3": {
+      "status": "complete",
+      "evidence": "The hero shows the run-out date at usual daily use. The 'How much should we recharge?' date input updates the top-up immediately and reconciles base energy, higher-slab uplift, fixed charges, VAT and current balance. See forecastRunOut and calculateTargetRecharge in lib/ledger.ts."
+    },
+    "R4": {
+      "status": "complete",
+      "evidence": "The 'Recharge timing, honestly compared' section runs both policies over the case's exact three months and reports consumed cost separately from deposits. It visibly proves zero energy-cost difference. All 25 public cases pass that invariant in tests/tariff.test.ts."
+    }
+  },
+  "team_members": [
+    {
+      "registered_name": "Adib Ar Rahman Khan (Rajin Khan)",
+      "github_username": "rajin-khan",
+      "major_contribution": "Team lead; problem decomposition, product direction, rules and tariff review, AI-agent coordination, verification plan, deployment and final submission ownership.",
+      "evidence_paths_or_commits": [
+        "HACKATHON_CONTEXT.md",
+        "CONTEXT.md",
+        "docs/adr/0001-local-deterministic-ledger.md"
+      ]
+    },
+    {
+      "registered_name": "Saumik Saha Kabbya",
+      "github_username": "Kabbya04",
+      "major_contribution": "Contribution record pending team confirmation before the judged commit.",
+      "evidence_paths_or_commits": []
+    },
+    {
+      "registered_name": "Samiyeel Alim Binaaf",
+      "github_username": "Pronaaf2k",
+      "major_contribution": "Contribution record pending team confirmation before the judged commit.",
+      "evidence_paths_or_commits": []
+    }
+  ],
+  "major_design_decisions": [
+    "Use a local deterministic ledger instead of Supabase or ML so every judged answer works offline and is auditable.",
+    "Use integer paisa and round each day's 5% energy VAT to the nearest paisa to avoid floating-point money drift.",
+    "Split usage progressively across slab boundaries and reset the counter only on calendar-month changes.",
+    "Accept same-shape JSON fixtures and validate consecutive dates, money fields and comparison months before calculation.",
+    "Use a custom SVG balance chart and native controls to avoid an unnecessary charting dependency."
+  ],
+  "known_limitations": [
+    "Imported judge fixtures last for the current browser session only; the app intentionally has no account or server persistence.",
+    "Future usage follows the case's stated usual_daily_units as a constant because the problem supplies that value and does not request a probabilistic forecast.",
+    "The first public build supports seeded cases and JSON file upload, not manual row-by-row entry."
+  ],
+  "ai_tools_used": [
+    {
+      "tool": "OpenAI Codex",
+      "used_for": "Official-rule research, prior-project audit, domain modeling, implementation, interface design, test generation, documentation and browser QA under the team lead's direction.",
+      "how_output_was_verified": "Pure-domain tests cover all 25 public fixtures, every slab boundary, monthly fixed charges, target reconciliation and the R-16 energy-cost invariant. The team also runs TypeScript checking, a production Next.js build and desktop/mobile browser QA."
+    }
+  ],
+  "licenses_file": "LICENSES.md",
+  "declaration": "The information above is complete and truthful to the best of the team's knowledge. Pending member-contribution lines will be replaced with confirmed work before the judged commit."
+}
