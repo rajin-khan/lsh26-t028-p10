@@ -27,7 +27,7 @@ Each problem has four required items. The early bonus requires at least three fu
 
 Each repository needs source code, `README.md`, `evaluation-manifest.json`, `EVENT.md`, and `LICENSES.md`. The README and manifest must describe the solving method and all three registered members' contributions. AI assistance and pre-event material must be disclosed. Secrets do not belong in the repository.
 
-Under kit v2.2, a demo video is optional and no longer than three minutes. If supplied, it must cover the method and every member's contribution. This differs from the older 60-second-minimum video instructions. Deployment, public access, final links, and the submission form remain team-lead steps after local review.
+Under kit v2.2, a demo video is optional and no longer than three minutes. If supplied, it must cover the method and every member's contribution. This differs from the older 60-second-minimum video instructions. P10 is deployed at [kotodin.vercel.app](https://kotodin.vercel.app/). Public repository access, confirming that the deployment matches the submitted commit, and the submission form remain team-lead steps.
 
 ## P10: prepaid meter recharge advisor
 

@@ -5,7 +5,7 @@ KotoDin shows how daily electricity use and recharges change a prepaid meter's b
 - Team: GROCERYBOIX, `LSH26-T028`
 - Problem: `P10`, Prepaid Meter Recharge Advisor
 - Repository: [rajin-khan/lsh26-t028-p10](https://github.com/rajin-khan/lsh26-t028-p10)
-- Live URL: pending public Vercel deployment
+- Live URL: [kotodin.vercel.app](https://kotodin.vercel.app/)
 - Demo video: not recorded. Optional, no longer than three minutes.
 - Event start code: `LSH26-8490-C900`
 - Public fixture: release 2.2, SHA-256 `13e7dd3d0ad55429bdce1db4c70175bb6f6c60a197826b9a8e87d3da210e4c4e`
@@ -101,7 +101,7 @@ The displayed cost is money consumed, energy plus VAT plus applicable first-rech
 - English and Bangla controls, dates and amounts use the same calculation results. Switching language does not change the data.
 - Native select, date, file and range controls provide keyboard access. The interface also has visible focus, a skip link, scrollable charts and tables, and reduced-motion support.
 
-The app uses Next.js, React and TypeScript. It has no backend or database. Vercel deployment is planned but has not been completed in this record.
+The app uses Next.js, React and TypeScript. It has no backend or database and is deployed on Vercel at [kotodin.vercel.app](https://kotodin.vercel.app/).
 
 The project vocabulary is in [CONTEXT.md](CONTEXT.md). The calculation design is recorded in [the architecture decision](docs/adr/0001-local-deterministic-ledger.md).
 
@@ -148,6 +148,6 @@ Pre-event material is declared in [EVENT.md](EVENT.md) and [evaluation-manifest.
 
 ## Before submission
 
-Deployment is still pending. After deploying, replace the live URL above and `live_url` in the manifest with the public address. If a demo is recorded, add its link to both files.
+The live URL is recorded above and in the manifest. Before submitting, wait for Vercel to finish deploying the exact commit you intend to submit. If a demo is recorded, add its link to both files.
 
 Open the repository and live app in a signed-out window. Confirm that the deployed application matches the exact 40-character commit SHA entered in the leader's Final Submission Form. Freeze the source by the 10:00 PM Asia/Dhaka build cutoff on 30 August 2026. The conflicting form-deadline instructions are recorded in [HACKATHON_CONTEXT.md](HACKATHON_CONTEXT.md). Keep the repository public and the app live until results are announced.
